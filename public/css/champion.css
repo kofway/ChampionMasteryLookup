@@ -1,0 +1,36 @@
+h1 {
+	display: flex;
+	align-items: center;
+}
+
+#container {
+	width: 80%;
+}
+
+#championIcon {
+	width: 50px;
+	margin-right: 8px;
+	border-radius: 5px;
+}
+
+#disclaimer {
+	margin-bottom: 5px;
+}
+
+table {
+	width: 100%;
+}
+
+/* Make table slightly wider on small screens */
+@media (max-width:800px) {
+	#container {
+		width: 90%;
+	}
+}
+
+/* Make table even wider on mobile */
+@media (max-width:525px) {
+	#container {
+		width: 105%;
+	}
+}

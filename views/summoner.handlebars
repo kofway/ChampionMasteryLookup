@@ -1,0 +1,102 @@
+{{#extend "layout"}}
+	{{#content "title"}}
+		{{summoner.name}} ({{summoner.region}}) - ChampionMasteryLookup
+	{{/content}}
+
+	{{#content "meta-description"}}Champion mastery scores for {{summoner.name}} ({{summoner.region}}){{/content}}
+
+	{{#content "css"}}
+		<link rel="stylesheet" type="text/css" href="/css/summoner.css">
+	{{/content}}
+
+	{{#content "scripts"}}
+		<script src="/js/summoner.js"></script>
+	{{/content}}
+
+
+	{{#content "body"}}
+		<div id="header">
+			<h1>
+				<img src="/img/profileIcons/{{summoner.icon}}.png" id="summonerIcon">
+				<span id="summonerName">{{summoner.name}} ({{summoner.region}})</span>
+			</h1>
+			<div id="profileLinks">
+				<a class="profileLink" href="https://{{summoner.region}}.op.gg/summoner/userName={{encodeURI summoner.name}}">op.gg</a>
+				<a class="profileLink" href="https://legends.ai/{{lowercase summoner.region}}/summoner/{{encodeURI (lowercase summoner.name)}}/">Legends.ai</a>
+			</div>
+			<div>Information will only update once every 10 minutes.</div>
+		</div>
+		<div id="container">
+			<table class="well">
+				<thead>
+					<tr>
+						{{>headerColumn name="Champion"}}
+						{{>headerColumn name="Level"}}
+						{{>headerColumn name="Points"}}
+						{{>headerColumn name="Chest Earned"}}
+						{{>headerColumn name="Last Played"}}
+						{{>headerColumn name="Progress"}}
+						{{>headerColumn name="Points To Next Level"}}
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					{{#each champions}}
+						<tr>
+							<td>
+								<a href="/champion?champion={{this.championId}}">{{this.championName}}</a>
+								<td>{{this.championLevel}}</td>
+								<td data-format-number="{{this.championPoints}}" data-value="{{this.championPoints}}">{{this.championPoints}}</td>
+								<td data-value="{{#if this.chestGranted}}1{{else}}0{{/if}}">
+									<img src="/img/chest.png" class="chest{{#unless this.chestGranted}} notEarned{{/unless}}">
+								</td>
+								<td data-format-time="{{this.lastPlayTime}}" data-value="{{this.lastPlayTime}}" data-toggle="tooltip"></td>
+								<td class="{{#lt this.championLevel 5}}collapsible{{/lt}}" data-value="{{this.sortingValue}}" data-tooltip="tooltip" title="{{this.tooltip}}">
+									{{#eq this.championLevel 7}}
+										Mastered
+									{{else}}
+										{{#gte this.championLevel 5}}
+											{{{getTokens}}}
+										{{else}}
+											<div class="progressBar-outer">
+												{{! sortingValue is the percentage to next level when champion level is <5}}
+												<div class="progressBar-inner" style="width: {{this.sortingValue}}%"></div>
+											</div>
+										{{/gte}}
+									{{/eq}}
+								</td>
+								<td class="{{#gte this.championLevel 5}}collapsible{{/gte}}" {{#lt this.championLevel 5}}data-format-number="{{this.championPointsUntilNextLevel}}"{{/lt}} data-value="{{this.pointsToNextLevel}}">
+									{{#gte this.championLevel 5}}
+										N/A
+									{{else}}
+										{{this.championPointsUntilNextLevel}}
+									{{/gte}}
+								</td>
+							</td>
+						</tr>
+					{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td><a href="/champion?champion=-1">{{totals.champions}} champions</a></td>
+						<td data-format-number="{{totals.level}}">{{totals.level}}</td>
+						<td data-format-number="{{totals.points}}">{{totals.points}}</td>
+						<td>{{totals.chests}}/{{totals.champions}}</td>
+						<td></td>
+						<td></td>
+						<td class="collapsible"></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<!-- `data-id` attribute will be set by `setupAds()` in script.js -->
+		<div class="ad-footer vm-placement"></div>
+	{{/content}}
+{{/extend}}
+
+
+{{#*inline "headerColumn"}}
+	<th class="{{#eq name "Progress"}}collapsible{{/eq}}" data-sorting-order="0">
+		{{name}}
+		<span class="collapsible">{{! the icon used for sorting goes in this span}}</span>
+	</th>
+{{/inline}}

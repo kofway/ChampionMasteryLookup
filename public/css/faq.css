@@ -1,0 +1,14 @@
+h1 {
+	text-align: center;
+}
+
+.question {
+	margin-bottom: 20px;
+	padding: 1%;
+	width: 100%;
+}
+
+.question-question {
+	font-weight: normal;
+	margin-bottom: 15px;
+}

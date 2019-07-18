@@ -1,0 +1,57 @@
+{{#extend "layout"}}
+	{{#content "title"}}{{champion.name}} - ChampionMasteryLookup{{/content}}
+	
+	{{#content "meta-description"}}Highscores for players with the {{#eq champion.id -1}}most total champion mastery points{{else eq champion.id -2}}highest combined champion mastery level{{else}}most champion mastery points on {{champion.name}}{{/eq}}{{/content}}
+
+	{{#content "css"}}
+		<link rel="stylesheet" type="text/css" href="/css/champion.css">
+	{{/content}}
+
+	{{#content "body"}}
+		<h1>
+			<img id="championIcon" src="/img/championIcons/{{champion.icon}}">
+			<span>{{champion.name}}</span>
+		</h1>
+		<div id="disclaimer">
+			Players must be looked up on this site to appear on this list
+		</div>
+		<div id="container">
+			<table class="well">
+				<thead>
+					<tr>
+						<th>Place</th>
+						<th>Name (Region)</th>
+						<th>{{#eq this.champion.id -2}}Total Level{{else}}Mastery Points{{/eq}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each scores}}
+						<tr>
+							<td>
+								{{ordinalize (add @index 1)}}
+							</td>
+							<td>
+								{{#if this}}
+									<a href="/summoner?summoner={{encodeURI this.name}}&region={{this.region}}">
+										{{this.name}} ({{this.region}})
+									</a>
+								{{else}}
+									Nobody
+								{{/if}}
+							</td>
+							<td data-format-number="{{#if this}}{{this.points}}{{else}}0{{/if}}">
+								{{#if this}}
+									{{this.points}}
+								{{else}}
+									0
+								{{/if}}
+							</td>
+						</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+		<!-- `data-id` attribute will be set by `setupAds()` in script.js -->
+		<div class="ad-footer vm-placement"></div>
+	{{/content}}
+{{/extend}}

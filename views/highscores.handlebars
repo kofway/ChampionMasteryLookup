@@ -1,0 +1,60 @@
+{{#extend "layout"}}
+
+	{{#content "title"}}Highscores - ChampionMasteryLookup{{/content}}
+
+	{{#content "meta-description"}}Highscores for players with the most champion mastery points on each champion{{/content}}
+
+	{{#content "css"}}
+		<link rel="stylesheet" type="text/css" href="/css/highscores.css">
+	{{/content}}
+
+	{{#content "scripts"}}
+		<script src="/js/highscores.js"></script>
+	{{/content}}
+
+	{{#content "body"}}
+		<h1>Highscores</h1>
+		Players must be looked up on this site to appear on this list
+		<br>
+		Click on a champion to see the top 20 players for that champion
+		<br>
+		<select id="quickJump">
+			<option value="quick_jump">Quick jump</option>
+			{{#each highscores}}
+				<option value="{{this.id}}">{{this.name}}</option>
+			{{/each}}
+		</select>
+		<!-- `data-id` attribute will be set by `setupAds()` in script.js -->
+		<div class="ad-header vm-placement"></div>
+		<div id="highscores">
+			{{#each highscores}}
+				<div class="champion well">
+					<div class="champion-icon">
+						<a href="/champion?champion={{this.id}}">
+							<img src="/img/championIcons/{{this.icon}}">
+						</a>
+					</div>
+					<div class="champion-info">
+						<a href="/champion?champion={{this.id}}">
+							<strong>{{this.name}}</strong>
+						</a>
+						{{#each this.scores}}
+							<div>
+								<strong>{{ordinalize (add @index 1)}}</strong>
+								{{#if this}}
+									<a href="/summoner?summoner={{encodeURI this.name}}&region={{this.region}}">
+										{{this.name}} ({{this.region}})
+									</a>
+									:
+									<span data-format-number="{{this.points}}">{{this.points}}</span>
+								{{else}}
+									Nobody
+								{{/if}}
+							</div>
+						{{/each}}
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	{{/content}}
+{{/extend}}
